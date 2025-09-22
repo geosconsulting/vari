@@ -1,0 +1,93 @@
+COPY(                                       -- COPY <query> TO <output> saves the results to disk.
+    SELECT
+       id,
+       names.primary as name,
+       confidence AS confidence,
+       CAST(socials AS JSON) as socials,    -- Ensure each attribute can be serialized to JSON
+       geometry                             -- DuckDB understands this to be a geometry type
+    FROM read_parquet('s3://overturemaps-us-west-2/release/2024-12-18.0/theme=places/type=place/*', filename=true, hive_partitioning=1)
+    WHERE categories.primary = 'pizza_restaurant'
+    AND bbox.xmin BETWEEN 12.139893 AND 12.734528       -- Only use the bbox min values
+    AND bbox.ymin BETWEEN 41.594905 AND 42.009509         -- because they are point geometries.
+
+) TO 'roma_pizza.geojson' WITH (FORMAT GDAL, DRIVER 'GeoJSON');
+
+
+
+
+COPY(
+    SELECT
+       id,
+       names.primary as name,
+       confidence AS confidence,
+       CAST(socials AS JSON) as socials,    -- Ensure each attribute can be serialized to JSON
+       geometry                             -- DuckDB understands this to be a geometry type
+    FROM read_parquet('s3://overturemaps-us-west-2/release/2024-12-18.0/theme=places/type=place/*', filename=true, hive_partitioning=1)
+    WHERE categories.primary = 'pizza_restaurant'
+    AND bbox.xmin BETWEEN 12.139893 AND 12.734528       -- Only use the bbox min values
+    AND bbox.ymin BETWEEN 41.594905 AND 42.009509         -- because they are point geometries.
+
+) TO 'overture_data.shp' WITH (FORMAT GDAL, DRIVER 'ESRI Shapefile');
+
+
+COPY(
+    SELECT * 
+    FROM read_parquet("s3://overturemaps-us-west-2/release/2024-12-18.0/theme=*/type=*/*", union_by_name = True)
+    WHERE 
+       bbox.xmin BETWEEN 12.139893 AND 12.734528       -- Only use the bbox min values
+   AND bbox.ymin BETWEEN 41.594905 AND 42.009509         -- because they are point geometries.
+
+) TO 'rome.parquet';
+
+
+COPY(
+    SELECT * 
+    FROM read_parquet("s3://overturemaps-us-west-2/release/2024-12-18.0/theme=places/type=*/*", union_by_name = True)
+    WHERE categories.primary = 'pizza_restaurant'
+    AND   bbox.xmin BETWEEN 12.139893 AND 12.734528       -- Only use the bbox min values
+    AND bbox.ymin BETWEEN 41.594905 AND 42.009509         -- because they are point geometries.
+
+) TO 'rome_pizza.parquet';
+
+
+COPY(
+    SELECT * 
+    FROM read_parquet("s3://overturemaps-us-west-2/release/2024-12-18.0/theme=places/type=*/*", union_by_name = True)
+    WHERE categories.primary = 'post_office'
+    AND   bbox.xmin BETWEEN 12.139893 AND 12.734528       -- Only use the bbox min values
+    AND bbox.ymin BETWEEN 41.594905 AND 42.009509         -- because they are point geometries.
+
+) TO 'uffici_postali.parquet';
+
+
+COPY(
+    SELECT * 
+    FROM read_parquet("s3://overturemaps-us-west-2/release/2024-12-18.0/theme=transportation/type=segment/*", union_by_name = True)
+    WHERE bbox.xmin BETWEEN 12.139893 AND 12.734528       -- Only use the bbox min values
+    AND bbox.ymin BETWEEN 41.594905 AND 42.009509         -- because they are point geometries.
+
+) TO 'strade.parquet';
+
+
+COPY(
+  SELECT
+    id,
+    names.primary as primary_name,
+    height,
+    geometry   -- DuckDB v.1.1.0 will autoload this as a `geometry` type
+  FROM read_parquet('azure://release/2024-12-18.0/theme=buildings/type=building/*', filename=true, hive_partitioning=1)
+  WHERE names.primary IS NOT NULL
+  AND bbox.xmin BETWEEN 12.139893 AND 12.734528       -- Only use the bbox min values
+  AND bbox.ymin BETWEEN 41.594905 AND 42.009509
+  LIMIT 100
+) TO 'roma_buildings.geojsonseq' WITH (FORMAT GDAL, DRIVER 'GeoJSONSeq');
+
+
+
+wsl --unregister docker-desktop
+
+sc.exe config wslservice start=demand
+
+Alb&rt0ne_2o24
+
+

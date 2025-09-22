@@ -1,0 +1,19 @@
+https://d4r.maps.arcgis.com/home/organization.html#overview
+Alb3rtone_2o25
+
+design4resilience
+Alb3rt0n3_2o24
+
+fabiolana
+Alb3rt0n3_2023
+
+Accesso a d4r.maps
+fabiolana
+Alb3rtone_2o25
+
+
+docker run -it -e AGIS_PWD="Alb3rtone_2o25" -p 8888:8888 ghcr.io/esri/arcgis-python-api-notebook
+docker run -it -e "AGIS_PWD=Alb3rtone_2o25" -e "AGIS_USR=fabiolana" -e "AGIS_URL=www.arcgis.com" -p 8888:8888 -v "C:/Users/User/PycharmProjects:/home/jovyan/" ghcr.io/esri/arcgis-python-api-notebook
+
+conda activate C:/Users/User/AppData/Local/Programs/ArcGIS/Pro/bin/Python/envs/arcgispro-py3
+conda activate C:\Users\User\AppData\Local\ESRI\conda\envs\arcgispro-py3-ecosystem
