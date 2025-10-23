@@ -1,0 +1,1 @@
+SELECT id,ST_AsGeoJson(geom) from nuts_rg_60m_2024 where cntr_code = 'IT' LIMIT 10;

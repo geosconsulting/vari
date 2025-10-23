@@ -1,6 +1,6 @@
 # $env:XXXX = "valore"  
 
 import os
-value = os.environ.get("XXXX")
+value = os.environ.get("TEMP")
 
-print(f"Value of XXXX is: {value}") 
+print(f"Value of TEMP is: {value}") 
